@@ -1,0 +1,41 @@
+<%= link_to 'Back to My Posts', posts_path, class: 'button' %>
+
+<h1>All Posts</h1>
+
+<%= form_with url: all_posts_path, method: :get, local: true do |form| %>
+
+<% Category.all.each do |category| %>
+<% category_id = "category_#{category.id}" %>
+<label for="<%= category_id %>" style="display: inline-block; margin-right: 10px;">
+    <%= check_box_tag "category_ids[]", category.id, params[:category_ids]&.include?(category.id.to_s), id: category_id %>
+    <%= category.name %>
+</label>
+<% end %>
+
+<%= form.submit "Filter" %>
+<% end %>
+
+<% @all_posts.each do |post| %>
+<div>
+    <h4><%= post.title %></h4>
+    <p><%= post.content %></p>
+    <% if post.images.attached? %>
+    <div>
+        <% post.images.each do |image| %>
+        <%= image_tag image, size: "300x300", alt: "Post Image" %>
+        <% end %>
+    </div>
+    <% end %>
+    <p>Categories: <%= post.categories.map(&:name).join(', ') %></p>
+
+    <%= link_to 'Show', post %>
+
+    <% if can? :edit, post %>
+    <%= link_to 'Edit', edit_post_path(post) %>
+    <% end %>
+
+    <% if can? :destroy, post %>
+    <%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+    <% end %>
+</div>
+<% end %>

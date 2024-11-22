@@ -1,0 +1,8 @@
+<div class="comment">
+    <% if comment.user.nil? %>
+    <% else %>
+    <strong><%= comment.user.email %>:</strong>
+    <p><%= comment.content %></p>
+    <small><%= time_ago_in_words(comment.created_at) %> ago</small>
+    <% end %>
+</div>

@@ -1,0 +1,40 @@
+<p>
+    <strong>Title:</strong>
+    <%= @post.title %>
+</p>
+
+<p>
+    <strong>Content:</strong>
+    <%= @post.content %>
+</p>
+
+<p>
+    <strong>Categories:</strong>
+    <%= @post.categories.map(&:name).join(', ') %>
+</p>
+
+<% if @post.images.attached? %>
+<div>
+    <% @post.images.each do |image| %>
+    <%= image_tag image, size: "300x300", alt: "Post Image" %>
+    <% end %>
+</div>
+<% end %>
+
+<div id="post" data-id="<%= @post.id %>"></div>
+
+<div id="comments">
+    <h3>Comments</h3>
+
+    <div id="existing-comments">
+        <%= render @post.comments %>
+    </div>
+
+    <%= form_with(model: [ @post, Comment.new ], url: post_comments_path(@post), id: 'new_comment') do |form| %>
+    <%= form.text_area :content, id: 'comment_content', placeholder: "Add a comment...", rows: 4 %>
+    <%= form.submit "Post Comment", class: 'btn btn-primary' %>
+    <% end %>
+</div>
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>

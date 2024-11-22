@@ -1,0 +1,54 @@
+<%
+=begin%>
+<% if user_signed_in? %>
+<%= link_to 'New Post', new_post_path, class: 'btn btn-primary' %>
+<% end %>
+<%
+=end%>
+
+<%= link_to 'Categories', categories_path %> &nbsp;&nbsp;&nbsp;
+
+<%= link_to 'All Posts', all_posts_path %>
+
+<%= form_with url: posts_path, method: :get, local: true do |form| %>
+
+<% Category.all.each do |category| %>
+<% category_id = "category_#{category.id}" %>
+<label for="<%= category_id %>" style="display: inline-block; margin-right: 10px;">
+    <%= check_box_tag "category_ids[]", category.id, params[:category_ids]&.include?(category.id.to_s), id: category_id %>
+    <%= category.name %>
+</label>
+<% end %>
+
+<%= form.submit "Filter" %>
+<% end %>
+
+<h1>Posts</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Category</th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @posts.each do |post| %>
+        <tr>
+            <td><%= post.title %></td>
+            <td><%= post.content %></td>
+            <td><%= post.categories.map(&:name).join(', ') %></td>
+            <td><%= link_to 'Show', post %></td>
+            <td><%= link_to 'Edit', edit_post_path(post) %></td>
+            <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Post', new_post_path %>
